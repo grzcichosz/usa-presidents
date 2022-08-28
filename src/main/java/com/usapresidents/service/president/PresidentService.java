@@ -1,11 +1,14 @@
 package com.usapresidents.service.president;
 
+import com.usapresidents.model.dto.PresidentDto;
 import com.usapresidents.model.entity.President;
 
 import java.util.List;
 
 public interface PresidentService {
-    List<President> getAllPresidents();
+    List<PresidentDto> getAllPresidents();
 
-    President savePresident(President president);
+    PresidentDto savePresident(PresidentDto presidentDto);
+
+    PresidentDto updatePresident(PresidentDto presidentDto);
 }

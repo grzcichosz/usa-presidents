@@ -1,5 +1,6 @@
 package com.usapresidents.controller;
 
+import com.usapresidents.model.dto.PresidentDto;
 import com.usapresidents.model.entity.President;
 import com.usapresidents.repository.PresidentsRepository;
 import com.usapresidents.service.president.PresidentService;
@@ -16,27 +17,20 @@ public class PresidentsController {
     private final PresidentService presidentService;
 
     @GetMapping("/all")
-    public List<President> getAll() {
+    public List<PresidentDto> getAll() {
         return presidentService.getAllPresidents();
     }
 
     @PostMapping("save")
-    public President save(@RequestBody President president) {
-
-
-        return presidentService.savePresident(president);
+    public PresidentDto save(@RequestBody PresidentDto presidentDto) {
+        return presidentService.savePresident(presidentDto);
     }
-//
-//    @PutMapping("update")
-//    public String updateWithBodyOnly(@RequestBody President president) {
-//        if (PresidentsDB.presidentRepository.size() - 1 < president.getId()) {
-//            president.setId((long) PresidentsDB.presidentRepository.size());
-//            PresidentsDB.presidentRepository.add(president);
-//        } else {
-//            PresidentsDB.presidentRepository.set(president.getId().intValue(), president);
-//        }
-//        return "Updated";
-//    }
+
+    @PutMapping("update")
+    public PresidentDto update(@RequestBody PresidentDto presidentDto) {
+
+        return presidentService.updatePresident(presidentDto);
+    }
 //
 //    @PatchMapping("update")
 //    public String updatePartial(@RequestBody President president) {
