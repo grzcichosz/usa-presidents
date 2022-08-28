@@ -2,6 +2,7 @@ package com.usapresidents.controller;
 
 import com.usapresidents.model.entity.President;
 import com.usapresidents.repository.PresidentsRepository;
+import com.usapresidents.service.president.PresidentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,19 +13,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PresidentsController {
 
-    private final PresidentsRepository presidentRepository;
+    private final PresidentService presidentService;
 
     @GetMapping("/all")
     public List<President> getAll() {
-        return presidentRepository.findAll();
+        return presidentService.getAllPresidents();
     }
 
-//    @PostMapping("save")
-//    public String save(@RequestBody President president) {
-//        president.setId((long) PresidentsDB.presidentRepository.size());
-//        PresidentsDB.presidentRepository.add(president);
-//        return "President " + president.getName() + " " + president.getSurname() + " saved.";
-//    }
+    @PostMapping("save")
+    public President save(@RequestBody President president) {
+
+
+        return presidentService.savePresident(president);
+    }
 //
 //    @PutMapping("update")
 //    public String updateWithBodyOnly(@RequestBody President president) {
