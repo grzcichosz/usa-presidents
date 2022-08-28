@@ -31,33 +31,18 @@ public class PresidentsController {
 
         return presidentService.updatePresident(presidentDto);
     }
-//
-//    @PatchMapping("update")
-//    public String updatePartial(@RequestBody President president) {
-//        President p = PresidentsDB.presidentRepository.get(president.getId().intValue());
-//        if (president.getName() != null) {
-//            p.setName(president.getName());
-//        }
-//        if (president.getSurname() != null) {
-//            p.setSurname(president.getSurname());
-//        }
-//        if (president.getTermFrom() != null) {
-//            p.setTermFrom(president.getTermFrom());
-//        }
-//        if (president.getTermTo() != null) {
-//            p.setTermTo(president.getTermTo());
-//        }
-//        if (president.getPoliticalParty() != null) {
-//            p.setPoliticalParty(president.getPoliticalParty());
-//        }
-//        return "Updated";
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public String deleteByIndex(@PathVariable int id) {
-//        PresidentsDB.presidentRepository.remove(id);
-//        return "Removed!";
-//    }
+
+    @PatchMapping("update")
+    public PresidentDto updatePartial(@RequestBody PresidentDto presidentDto) {
+        return presidentService.updatePresidentPartial(presidentDto);
+    }
 
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteByIndex(@PathVariable Long id) {
+        presidentService.deletePresident(id);
+    }
 }
+
+
+

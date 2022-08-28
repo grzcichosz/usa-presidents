@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -19,24 +21,52 @@ public class PresidentServiceImpl implements PresidentService {
 
     @Override
     public List<PresidentDto> getAllPresidents() {
-        return presidentsRepository.findAll().stream()
-                .map(PresidentMapper::toDto)
-                .collect(Collectors.toList());
+        return presidentsRepository.findAll().stream().map(PresidentMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public PresidentDto savePresident(PresidentDto presidentDto) {
         return PresidentMapper.toDto(presidentsRepository.save(PresidentMapper.toEntity(presidentDto)));
     }
+
     @Override
-    public PresidentDto updatePresident(PresidentDto presidentDto){
-        presidentsRepository.findById(presidentDto.getId()).ifPresent(president -> {
+    public PresidentDto updatePresident(PresidentDto presidentDto) {
+        presidentsRepository.findById(presidentDto.getId()).map(president -> {
             president.setName(presidentDto.getName());
             president.setSurname(presidentDto.getSurname());
             president.setPoliticalParty(presidentDto.getPoliticalParty());
             president.setTermFrom(presidentDto.getTermFrom());
             president.setTermTo(presidentDto.getTermTo());
+            return president;
         });
         return PresidentMapper.toDto(presidentsRepository.getReferenceById(presidentDto.getId()));
+    }
+
+    @Override
+    public PresidentDto updatePresidentPartial(PresidentDto presidentDto) {
+        presidentsRepository.findById(presidentDto.getId()).map(president -> {
+            if (nonNull(presidentDto.getName())) {
+                president.setName(presidentDto.getName());
+            }
+            if (nonNull(presidentDto.getSurname())) {
+                president.setSurname(presidentDto.getSurname());
+            }
+            if (nonNull(presidentDto.getTermFrom())) {
+                president.setTermFrom(presidentDto.getTermFrom());
+            }
+            if (nonNull(presidentDto.getTermTo())) {
+                president.setTermTo(presidentDto.getTermTo());
+            }
+            if (nonNull(presidentDto.getPoliticalParty())) {
+                president.setPoliticalParty(presidentDto.getPoliticalParty());
+            }
+            return president;
+        });
+        return PresidentMapper.toDto(presidentsRepository.getReferenceById(presidentDto.getId()));
+    }
+
+    @Override
+    public void deletePresident(Long id) {
+        presidentsRepository.deleteById(id);
     }
 }
