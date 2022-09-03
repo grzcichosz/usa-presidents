@@ -5,6 +5,8 @@ import com.usapresidents.model.entity.President;
 import com.usapresidents.repository.PresidentsRepository;
 import com.usapresidents.service.president.PresidentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +43,11 @@ public class PresidentsController {
     public PresidentDto update(@RequestBody PresidentDto presidentDto) {
 
         return presidentService.updatePresident(presidentDto);
+    }
+
+    @ExceptionHandler({RuntimeException.class, IllegalAccessError.class})
+    public final ResponseEntity<Object> handleExceptions(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PatchMapping("update")
