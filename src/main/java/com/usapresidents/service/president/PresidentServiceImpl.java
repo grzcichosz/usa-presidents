@@ -1,6 +1,9 @@
 package com.usapresidents.service.president;
 
+import com.usapresidents.exception.exceptions.EntityNotFoundException;
+import com.usapresidents.exception.messages.PresidentsControllerExceptionMessages;
 import com.usapresidents.model.dto.PresidentDto;
+import com.usapresidents.model.entity.President;
 import com.usapresidents.model.mapper.PresidentMapper;
 import com.usapresidents.repository.PresidentsRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +25,18 @@ public class PresidentServiceImpl implements PresidentService {
 
     @Override
     public List<PresidentDto> getAllPresidents() {
-        return presidentsRepository.findAll().stream().map(PresidentMapper::toDto).collect(Collectors.toList());
+        return presidentsRepository.findAll().stream()
+                .map(PresidentMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public Set<PresidentDto> findPresidentsByName(String name) {
-        return presidentsRepository.findPresidentsByName(name).stream()
+        Set<President> presidents = presidentsRepository.findPresidentsByName(name);
+        if(presidents.isEmpty()){
+            throw new EntityNotFoundException(PresidentsControllerExceptionMessages
+                    .ENTITY_FOR_PROVIDED_NAME_NOT_EXISTS.getMessage());
+        }
+        return presidents.stream()
                 .map(PresidentMapper::toDto).collect(Collectors.toSet());
     }
 
@@ -74,7 +83,8 @@ public class PresidentServiceImpl implements PresidentService {
                 president.setPoliticalParty(presidentDto.getPoliticalParty());
             }
             return PresidentMapper.toDto(president);
-        }).orElseThrow(()-> new RuntimeException("No such president exists!"));
+        }).orElseThrow(()-> new EntityNotFoundException(PresidentsControllerExceptionMessages
+                .ENTITY_FOR_PROVIDED_ID_NOT_EXISTS.getMessage()));
     }
 
     @Override
